@@ -1,0 +1,6 @@
+Referer: https://search.51job.com/list/000000,000000,0000,00,9,99,%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B%E5%B8%88,2,2.html
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en
+User-Agent: Scrapy/1.5.0 (+https://scrapy.org)
+Accept-Encoding: gzip,deflate
+Cookie: guid=15253652809969070059; search=jobarea%7E%60000000%7C%21ord_field%7E%600%7C%21; nsearch=jobarea%3D%26%7C%26ord_field%3D%26%7C%26recentSearch0%3D%26%7C%26recentSearch1%3D%26%7C%26recentSearch2%3D%26%7C%26recentSearch3%3D%26%7C%26recentSearch4%3D%26%7C%26collapse_expansion%3D
