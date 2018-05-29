@@ -15,7 +15,8 @@ class A51jobSpider(scrapy.Spider):
     def start_requests(self):
         # 软件工程师
         p_type = "软件工程师"
-        start_url = 'https://search.51job.com/list/000000,000000,0000,32,9,99,{},2,1.html?lang=c&stype=&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&providesalary=99&lonlat=0%2C0&radius=-1&ord_field=0&confirmdate=9&fromType=&dibiaoid=0&address=&line=&specialarea=00&from=&welfare='
+        # Python Java C Php Go js
+        start_url = "https://search.51job.com/list/000000,000000,0000,32,9,99,js,2,1.html?lang=c&stype=1&postchannel=0000&workyear=99&cotype=99&degreefrom=99&jobterm=99&companysize=99&lonlat=0%2C0&radius=-1&ord_field=0&confirmdate=9&fromType=4&dibiaoid=0&address=&line=&specialarea=00&from=&welfare="
         # 拼接起始URL
         url = start_url.format(p_type, 1)
         yield Request(url, callback=self.parse_urls)
@@ -52,11 +53,19 @@ class A51jobSpider(scrapy.Spider):
         item = JobsItem()
         item['job_name'] = response.xpath("//div[@class='cn']/h1/text()").extract()[0]
         item['job_summary'] = response.xpath("//div[contains(@class, 'bmsg') and contains(@class, 'job_msg') and contains(@class, 'inbox')]").re("<div class=\"bmsg job_msg inbox\">[\s\S]*<div class=\"mt10\">")[0][32:-18]
+        item['contact'] = response.xpath("//div[contains(@class, 'bmsg') and contains(@class, 'inbox')]/p[@class='fp']/text()").extract()[0]
         # require element 
         require_elements = response.xpath("//div[contains(@class, 'jtag') and contains(@class, 'inbox')]/div[@class='t1']/span[@class='sp4']")
-        item['job_require_degree'] = require_elements.xpath("em[@class='i2']/ancestor::span[@class='sp4']/text()").extract()
-        item['job_require_experience'] = require_elements.xpath("em[@class='i1']/ancestor::span[@class='sp4']/text()").extract()
-        item['job_require_number'] = require_elements.xpath("em[@class='i3']/ancestor::span[@class='sp4']/text()").extract()
-        item['publish_time'] = require_elements.xpath("em[@class='i4']/ancestor::span[@class='sp4']/text()").extract()
+        try:
+            item['job_require_degree'] = require_elements.xpath("em[@class='i2']/ancestor::span[@class='sp4']/text()").extract()[0]
+            item['job_require_experience'] = require_elements.xpath("em[@class='i1']/ancestor::span[@class='sp4']/text()").extract()[0]
+            item['job_require_number'] = require_elements.xpath("em[@class='i3']/ancestor::span[@class='sp4']/text()").extract()[0]
+            item['publish_time'] = require_elements.xpath("em[@class='i4']/ancestor::span[@class='sp4']/text()").extract()[0]
+        except:
+            pass
+        # company regin salary
+        item['company_name'] = response.xpath("//div[@class='cn']/p[@class='cname']/a/text()").extract()[0]
+        item['regin'] = response.xpath("//div[@class='cn']/span[@class='lname']/text()").extract()[0]
+        item['salary'] = response.xpath("//div[@class='cn']/strong/text()").extract()[0]
         item['origin_url'] = response.url
         yield item
